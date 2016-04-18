@@ -1,0 +1,36 @@
+from __init__ import db
+from models import *
+db.create_all()
+admin = Admin('admin', '123456')
+db.session.add(admin)
+db.session.commit()
+
+user
+user1 = User('huangli', 'converse')
+db.session.add(user1)
+db.session.commit()
+
+community
+c1 = Community('景秀天下', user1.id)
+db.session.add(c1)
+db.session.commit()
+
+search
+user1 = db.session.query(User).filter_by(username='ekinasm').first()
+user1.community
+user1.community.name 报错，为什么可以找到community对象，但是无法引用字段了？
+
+快递收存单
+# box_number:箱柜编号
+# company：快递公司
+# phone：客户电话
+# name：客户姓名
+# delivery_time:送达时间
+# pick_time:取件时间
+# community_id: 小区id
+from datetime import datetime
+c1 = db.session.query(Community).first()
+d1 = datetime.today()
+d2 = datetime.today()
+receipt1 = Receipt('A0012312','box05','顺风','18671755701','黄立',d1,d2,c1.id)
+
