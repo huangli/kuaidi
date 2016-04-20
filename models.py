@@ -77,6 +77,7 @@ class Community(db.Model):
 # delivery_time:送达时间
 # pick_time:取件时间
 # community_id: 小区id
+# is_sign:是否签收0未签，1已经签收
 class Receipt(db.Model):
   id = db.Column(db.String(60), primary_key=True)
   box_number = db.Column(db.String(20)) 
@@ -86,6 +87,7 @@ class Receipt(db.Model):
   delivery_time = db.Column(db.DateTime, primary_key=True)
   pick_time = db.Column(db.DateTime)
   community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
+  is_sign = db.Column(db.Boolean)
 
   def __init__(self, id, box_number, company, phone, name, delivery_time, pick_time, community_id):
       self.id = id
@@ -96,38 +98,39 @@ class Receipt(db.Model):
       self.delivery_time = delivery_time
       self.pick_time = pick_time
       self.community_id = community_id
+      self.is_sign = False
 
   def __repr__(self):
       return '<Receipt %r>' % self.id
 
-# 快递收存单
+# 快递发件单
 #id: 快递单号
-# box_number:箱柜编号
-# company：快递公司
-# phone：客户电话
+# company:快递公司
 # name：客户姓名
-# delivery_time:送达时间
-# pick_time:取件时间
+# phone：客户电话
+# send_time:寄件时间
+# amount: 金额
 # community_id: 小区id
-class Sender(db.Model):
+# is_pick: 0快递员未取件，1快递员已经取件
+class Post(db.Model):
   id = db.Column(db.String(60))
-  box_number = db.Column(db.String(20)) 
   company = db.Column(db.String(40))
   phone = db.Column(db.String(20))
   name = db.Column(db.String(40), primary_key=True)
-  delivery_time = db.Column(db.DateTime, primary_key=True)
-  pick_time = db.Column(db.DateTime)
+  send_time = db.Column(db.DateTime, primary_key=True)
+  amount = db.Column(db.Float)
   community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
+  is_pick = db.Column(db.Boolean)
 
-  def __init__(self, id, box_number, company, phone, name, delivery_time, pick_time, community_id):
+  def __init__(self, id, company, phone, name, send_time, amount, community_id):
       self.id = id
-      self.box_number = box_number
       self.company = company
       self.phone = phone
       self.name = name
-      self.delivery_time = delivery_time
-      self.pick_time = pick_time
+      self.send_time = send_time
+      self.amount = amount
       self.community_id = community_id
+      self.is_pick = False
 
   def __repr__(self):
       return '<Receipt %r>' % self.id

@@ -33,4 +33,13 @@ c1 = db.session.query(Community).first()
 d1 = datetime.today()
 d2 = datetime.today()
 receipt1 = Receipt('A0012312','box05','顺风','18671755701','黄立',d1,d2,c1.id)
+db.session.add(receipt1)
+db.session.commit()
 
+发件单
+c1 = db.session.query(Community).first()
+from datetime import datetime
+d1 = datetime.today()
+post1 = Post('S0012312','顺风','18671755701','冉凤鸣',d1,18,c1.id)
+db.session.add(post1)
+db.session.commit()
