@@ -1,8 +1,9 @@
 #coding=utf-8
-
 import json
 from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash
+from __init__ import db
+from models import *
 
 app = Flask(__name__)
 
@@ -15,14 +16,18 @@ def index():
 def login():
     error = None
     if request.method == 'POST':
-        if request.form.get('username', None) == 'admin':
-            # error = 'Invalid Credentials. Please try again.'
-            return "it works" + request.form.get('password', None)
+        username = request.form.get('username')
+        password = request.form.get('password')
+        login_user = User.query.filter_by(name=username).filter_by(password=password).first()
+
+        if login_user is None:
+            error = u'不好意思，密码错误'
+            print error
         else:
-            return request.form.get('username', None)
-            # return redirect(url_for('home'))
+            return redirect(url_for('home'))
     return render_template('login.html', error=error)
 
+# 主页面
 @app.route('/home')
 def home():
   return 'Home page'

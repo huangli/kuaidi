@@ -23,6 +23,7 @@
         <input type="password" name="password" id="inputPassword" class="form-control" placeholder="密码" required>
         <button id="btSubmit" class="btn btn-lg btn-primary btn-block" type="submit">登陆</button>
       </form>
+    {% if error %} <p class="form-signin"><strong>{{ error }}</strong> {% endif %}
     </div> <!-- /container -->
   </body>
 

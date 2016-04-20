@@ -5,29 +5,29 @@ from  __init__ import db
 class Admin(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   username = db.Column(db.String(40), unique=True)
-  pwd = db.Column(db.String(20))
+  password = db.Column(db.String(20))
 
-  def __init__(self, username, pwd):
+  def __init__(self, username, password):
     self.username = username
-    self.pwd = pwd
+    self.password = password
 
   def __repr__(self):
       return '<Admin %r>' % self.username
 
 # 小区管理员
-# username: 管理员账号
+# name: 管理员账号
 # pwd:密码
 # community_id:小区id
 class User(db.Model):
   id = db.Column(db.Integer, primary_key=True)
-  name = db.Column(db.String(40), unique=True)
-  pwd = db.Column(db.String(20))
+  name = db.Column(db.String(40))
+  password = db.Column(db.String(20))
   # community = db.relationship('Community', backref='Community.name', primaryjoin='User.id==Community.user_id')
   community = db.relationship('Community', backref='Community',uselist=False)
 
-  def __init__(self, name, pwd):
+  def __init__(self, name, password):
       self.name = name
-      self.pwd = pwd
+      self.password = password
 
   def __repr__(self):
       return '<User %r>' % self.name

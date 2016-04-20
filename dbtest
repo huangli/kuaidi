@@ -1,3 +1,7 @@
+1. 启动mysql
+
+问题：碰到无法找到某个对象的问题，删除table然后重新create_all()搞定
+
 from __init__ import db
 from models import *
 db.create_all()
@@ -43,3 +47,7 @@ d1 = datetime.today()
 post1 = Post('S0012312','顺风','18671755701','冉凤鸣',d1,18,c1.id)
 db.session.add(post1)
 db.session.commit()
+
+#search
+user1 = User.query.filter_by(name='huangli').first()
+use2 =User.query.filter_by(name='huangli').filter_by(password='converse').first()
