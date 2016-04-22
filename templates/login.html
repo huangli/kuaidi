@@ -14,6 +14,7 @@
    <link href="static/signin.css" rel="stylesheet">
   </head>
   <body>
+  <!-- container -->
     <div class="container">
       <form class="form-signin" target = "_self" action="{{ url_for('login') }}" method = "post">
         <h2 class="form-signin-heading">请登录</h2>
@@ -24,7 +25,8 @@
         <button id="btSubmit" class="btn btn-lg btn-primary btn-block" type="submit">登陆</button>
       </form>
     {% if error %} <p class="form-signin"><strong>{{ error }}</strong> {% endif %}
-    </div> <!-- /container -->
+    </div> 
+    <!-- /container -->
   </body>
 
 </html>

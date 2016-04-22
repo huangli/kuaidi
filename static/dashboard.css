@@ -6,17 +6,13 @@
 body {
   padding-top: 50px;
 }
-
-
 /*
  * Global add-ons
  */
-
 .sub-header {
   padding-bottom: 10px;
   border-bottom: 1px solid #eee;
 }
-
 /*
  * Top navigation
  * Hide default border to remove 1px line.
@@ -24,7 +20,6 @@ body {
 .navbar-fixed-top {
   border: 0;
 }
-
 /*
  * Sidebar
  */
@@ -65,12 +60,9 @@ body {
   color: #fff;
   background-color: #428bca;
 }
-
-
 /*
  * Main content
  */
-
 .main {
   padding: 20px;
 }
@@ -83,12 +75,9 @@ body {
 .main .page-header {
   margin-top: 0;
 }
-
-
 /*
  * Placeholder dashboard ideas
  */
-
 .placeholders {
   margin-bottom: 30px;
   text-align: center;
