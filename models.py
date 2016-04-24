@@ -15,22 +15,39 @@ class Admin(db.Model):
       return '<Admin %r>' % self.username
 
 # 小区管理员
-# name: 管理员账号
-# pwd:密码
+# username: 管理员账号
+# password:密码
 # community_id:小区id
 class User(db.Model):
   id = db.Column(db.Integer, primary_key=True)
-  name = db.Column(db.String(40))
+  username = db.Column(db.String(40))
   password = db.Column(db.String(20))
   # community = db.relationship('Community', backref='Community.name', primaryjoin='User.id==Community.user_id')
   community = db.relationship('Community', backref='Community',uselist=False)
 
-  def __init__(self, name, password):
-      self.name = name
+  def __init__(self, username, password):
+      self.username = username
       self.password = password
 
   def __repr__(self):
-      return '<User %r>' % self.name
+      return '<User %r>' % self.username
+
+  # Flask-Login integration
+  def is_authenticated(self):
+      return True
+
+  def is_active(self):
+      return True
+
+  def is_anonymous(self):
+      return False
+
+  def get_id(self):
+      return self.id
+
+  # Required for administrative interface
+  def __unicode__(self):
+      return self.username
 
 #小区住户
 class Inhabitant(db.Model):
@@ -78,6 +95,7 @@ class Community(db.Model):
 # delivery_time:送达时间
 # pick_time:取件时间
 # community_id: 小区id
+# address: 详细地址
 # is_sign:是否签收0未签，1已经签收
 class Receipt(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -88,6 +106,7 @@ class Receipt(db.Model):
   name = db.Column(db.String(40))
   delivery_time = db.Column(db.DateTime,index=True)
   pick_time = db.Column(db.DateTime)
+  address = db.Column(db.String(40))
   community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
   is_sign = db.Column(db.Boolean)
 
@@ -106,6 +125,7 @@ def __repr__(self):
 # phone：客户电话
 # send_time:寄件时间
 # amount: 金额
+# address:详细地址
 # community_id: 小区id
 # is_pick: 0快递员未取件，1快递员已经取件
 class Post(db.Model):
@@ -116,6 +136,7 @@ class Post(db.Model):
   name = db.Column(db.String(40))
   send_time = db.Column(db.DateTime, index=True)
   amount = db.Column(db.Float)
+  address = db.Column(db.String(40))
   community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
   is_pick = db.Column(db.Boolean)
 

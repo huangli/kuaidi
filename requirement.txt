@@ -2,6 +2,7 @@ Babel==2.3.3
 Flask==0.10.1
 Flask-Admin==1.4.0
 Flask-BabelEx==0.9.3
+Flask-Login==0.3.2
 Flask-SQLAlchemy==2.1
 itsdangerous==0.24
 Jinja2==2.8
