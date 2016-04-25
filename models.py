@@ -108,6 +108,7 @@ class Receipt(db.Model):
   pick_time = db.Column(db.DateTime)
   address = db.Column(db.String(40))
   community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
+  # community = db.relationship('Community', backref='Receipt')
   is_sign = db.Column(db.Boolean)
 
 def __init__(self, **kwargs):

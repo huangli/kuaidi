@@ -2,7 +2,7 @@
 import sys
 from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash
-from __init__ import db
+from __init__ import *
 from models import *
 from flask_admin.contrib.sqla import ModelView
 # from flask_admin import admin, BaseView, expose
@@ -13,10 +13,11 @@ from sms import sendMsg
 # import flask_login as login
 from flask.ext.login import login_user , logout_user , current_user , login_required
 from flask.ext.login import LoginManager
+from flask_admin.contrib.sqla.filters import BooleanEqualFilter
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '12345678'
+app.config['SECRET_KEY'] = 'afsdkj12345678'
 # Initialize babel
 babel = Babel(app)
 
@@ -84,7 +85,7 @@ def login():
 
 
 # 收件单View
-class UserView(ModelView):
+class ReceiptView(ModelView):
     column_labels = dict(express_id=u'快递单'
                         ,box_number=u'箱柜号'
                         ,company=u'快递公司'
@@ -95,20 +96,35 @@ class UserView(ModelView):
                         ,pick_time=u'取件时间'
                         ,is_sign=u'是否取件'
                         )
+    # column_filters = (BooleanEqualFilter(column=User.company, name='顺风'),)
+
     # 导出csv
     can_export = True
     # column_display_pk = True
     can_delete = False
     column_searchable_list = ['phone','delivery_time']
+    column_filters = ['company']
+    # column_exclude_list = ['community']
+    # column_export_exclude_list = ['community']
+    # column_editable_list = ['express_id','box_number','phone','name','address','']
+    column_hide_backrefs = True
+    # form_choices = { 'company': [ ('0', 'Not Showing'), ('1', 'Showing')] }
+
+    # show receipts created by self
+    def get_query(self):
+        return self.session.query(self.model).filter(self.model.community_id==current_user.community.id)
 
     @login_required
     def is_accessible(self):
         return current_user.is_authenticated
 
-    # def after_model_change(self, form, model, is_created):
+
+    def after_model_change(self, form, model, is_created):
          # tablename = form.tablename
-        # if is_created: # create the table just once
+        if is_created: # create the table just once
             # sendMsg(model.phone,'您的验证码是：【2499】。请不要把验证码泄露给其他人。') 
+            model.community_id = current_user.community.id
+            self.session.commit()
 
 # 寄件单View 
 class PostView(ModelView):
@@ -158,7 +174,7 @@ if __name__ == '__main__':
     sys.setdefaultencoding('utf8')
     admin = admin.Admin(app, name=u'快件收发', index_view=MyAdminIndexView(),base_template='my_master.html')
     # admin.locale_selector(get_locale)
-    admin.add_view(UserView(Receipt, db.session, u'收快递'))
+    admin.add_view(ReceiptView(Receipt, db.session, u'收快递'))
     admin.add_view(PostView(Post, db.session, u'发快递'))
     # admin.add_view(MyView(name='Hello'))
     app.run(debug=True)
