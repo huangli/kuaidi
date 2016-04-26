@@ -1,53 +1,68 @@
 #coding=utf-8
 from  __init__ import db
+from flask.ext.security import  SQLAlchemyUserDatastore, \
+    UserMixin, RoleMixin, login_required
 
-# 系统管理员
-class Admin(db.Model):
-  id = db.Column(db.Integer, primary_key=True)
-  username = db.Column(db.String(40), unique=True)
-  password = db.Column(db.String(20))
 
-  def __init__(self, username, password):
-    self.username = username
-    self.password = password
+roles_users = db.Table('roles_users',
+        db.Column('user_id', db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE')),
+        db.Column('role_id', db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE')))
 
-  def __repr__(self):
-      return '<Admin %r>' % self.username
+
+# Role class
+class Role(db.Model, RoleMixin):
+    # Our Role has three fields, ID, name and description
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(100))
+
+    # __str__ is required by Flask-Admin, so we can have human-readable values for the Role when editing a User.
+    # If we were using Python 2.7, this would be __unicode__ instead.
+    def __str__(self):
+        return self.name
+
+    # __hash__ is required to avoid the exception TypeError: unhashable type: 'Role' when saving a User
+    def __hash__(self):
+        return hash(self.name)
 
 # 小区管理员
 # username: 管理员账号
 # password:密码
 # community_id:小区id
-class User(db.Model):
-  id = db.Column(db.Integer, primary_key=True)
-  username = db.Column(db.String(40))
-  password = db.Column(db.String(20))
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(40))
+    password = db.Column(db.String(20))
   # community = db.relationship('Community', backref='Community.name', primaryjoin='User.id==Community.user_id')
-  community = db.relationship('Community', backref='Community',uselist=False)
+    community = db.relationship('Community', backref='Community',uselist=False)
+    roles = db.relationship(
+        'Role',
+        secondary=roles_users,
+        backref=db.backref('users', lazy='dynamic')
+    )
 
-  def __init__(self, username, password):
-      self.username = username
-      self.password = password
+    def __init__(self, **kwargs):
+      super(User, self).__init__(**kwargs)
 
-  def __repr__(self):
-      return '<User %r>' % self.username
+    def __repr__(self):
+        return '<User %r>' % self.username
 
   # Flask-Login integration
-  def is_authenticated(self):
-      return True
+    def is_authenticated(self):
+        return True
 
-  def is_active(self):
-      return True
+    def is_active(self):
+        return True
 
-  def is_anonymous(self):
-      return False
+    def is_anonymous(self):
+        return False
 
-  def get_id(self):
-      return self.id
+    def get_id(self):
+        return self.id
 
   # Required for administrative interface
-  def __unicode__(self):
-      return self.username
+    def __unicode__(self):
+        return self.username
 
 #小区住户
 class Inhabitant(db.Model):
@@ -82,7 +97,7 @@ class Community(db.Model):
       self.user_id = user_id
 
   def __repr__(self):
-      return '<Community %r>' % self.name
+      return '%s' % self.name
 
 
 # 快递收存单

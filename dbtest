@@ -51,3 +51,10 @@ db.session.commit()
 #search
 user1 = User.query.filter_by(name='huangli').first()
 use2 =User.query.filter_by(name='huangli').filter_by(password='converse').first()
+
+#role
+roleadmin = Role(name='admin',description = 'Administrator')
+roleuser = Role(name = 'user',description =  'end user')
+db.session.add(roleadmin)
+db.session.add(roleuser)
+db.session.commit()
