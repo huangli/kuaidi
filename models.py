@@ -68,7 +68,7 @@ class Inhabitant(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40))
     phone = db.Column(db.String(20))
-    born_date = db.Column(db.DateTime)
+    born_date = db.Column(db.Date)
     interest = db.Column(db.String(80))
     addr = db.Column(db.String(80))
 
@@ -86,7 +86,7 @@ class Inhabitant(db.Model):
 class Community(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id',ondelete='CASCADE'))
 
     def __init__(self, **kwargs):
         super(Community, self).__init__(**kwargs)
@@ -114,16 +114,19 @@ class Receipt(db.Model):
     company = db.Column(db.String(40))
     phone = db.Column(db.String(20),index=True)
     name = db.Column(db.String(40))
-    delivery_time = db.Column(db.DateTime,index=True)
-    pick_time = db.Column(db.DateTime)
+    delivery_time = db.Column(db.Date,index=True)
+    pick_time = db.Column(db.Date)
     address = db.Column(db.String(40))
     community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
     # community = db.relationship('Community', backref='Receipt')
     is_sign = db.Column(db.Boolean)
+    # message status
+    sms_status = db.Column(db.Boolean)
 
     def __init__(self, **kwargs):
-        super(User, self).__init__(**kwargs)
+        super(Receipt, self).__init__(**kwargs)
         self.is_sign = False
+        self.sms_status = False
 
     def __repr__(self):
         return '<Receipt %r>' % self.id
@@ -136,6 +139,7 @@ class Receipt(db.Model):
 # phone：客户电话
 # send_time:寄件时间
 # amount: 金额
+# weight: 重量
 # address:详细地址
 # community_id: 小区id
 # is_pick: 0快递员未取件，1快递员已经取件
@@ -145,11 +149,14 @@ class Post(db.Model):
     company = db.Column(db.String(40))
     phone = db.Column(db.String(20), index=True)
     name = db.Column(db.String(40))
-    send_time = db.Column(db.DateTime, index=True)
+    send_time = db.Column(db.Date, index=True)
     amount = db.Column(db.Float)
+    weight = db.Column(db.Float)
     address = db.Column(db.String(40))
     community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
     is_pick = db.Column(db.Boolean)
+    # message status
+    sms_status = db.Column(db.Boolean)  
 
     def __init__(self, **kwargs):
         super(Post, self).__init__(**kwargs)
@@ -164,8 +171,8 @@ class ReceiptReport(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     community_name = db.Column(db.String(30))
     company = db.Column(db.String(40)) 
-    count = db.Column(db.Integer)
     my_month = db.Column(db.String(20))
+    count = db.Column(db.Integer)
 
     def __init__(self, **kwargs):
         super(Receipt_Report, self).__init__(**kwargs)

@@ -1,7 +1,6 @@
 #coding=utf-8
 from __init__ import *
 from views import *
-from sms import sendMsg
 import sys
 from flask import Flask, request, session, g, redirect, url_for,abort, render_template, flash
 from flask_admin.model import filters

@@ -1,5 +1,6 @@
 #coding=utf-8
 from models import *
+from sms import sendMsg
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib.sqla.view import func
 from flask_admin import helpers,expose,BaseView
@@ -18,7 +19,8 @@ class ReceiptView(ModelView):
                         ,address=u'详细地址'
                         ,delivery_time=u'寄存时间'
                         ,pick_time=u'取件时间'
-                        ,is_sign=u'是否取件'
+                        ,is_sign=u'取件'
+                        ,sms_status=u'短信'
                         )
 
     # 导出csv
@@ -27,6 +29,7 @@ class ReceiptView(ModelView):
     can_delete = False
     column_searchable_list = ['phone']
     column_filters = [ DateBetweenFilter( Receipt.delivery_time,u'寄存时间'), 'company']
+    form_excluded_columns = ['sms_status']
     # column_exclude_list = ['community']
     # column_export_exclude_list = ['community']
     # column_editable_list = ['express_id','box_number','phone','name','address','']
@@ -50,7 +53,11 @@ class ReceiptView(ModelView):
     def after_model_change(self, form, model, is_created):
          # tablename = form.tablename
         if is_created: # create the table just once
-            # sendMsg(model.phone,'您的验证码是：【2499】。请不要把验证码泄露给其他人。') 
+            sms = sendMsg(model.phone,'您的验证码是：【2499】。请不要把验证码泄露给其他人。') 
+            if (sms == '2'):
+                model.sms_status = 1
+            else:
+                model.sms_status = 0
             model.community_id = current_user.community.id
             self.session.commit()
 
@@ -63,14 +70,26 @@ class PostView(ModelView):
                         ,name=u'收件人'
                         ,address=u'详细地址'
                         ,send_time=u'发件时间'
-                        ,amount=u'金额'
-                        ,is_pick=u'是否取件'
+                        ,amount=u'金额(元)'
+                        ,weight=u'重量(kg)'
+                        ,is_pick=u'取件'
+                        ,sms_status=u'短信'
                         )
+    form_excluded_columns = ['sms_status']
+    form_args = dict(
+        send_time=dict(format='%Y-%m-%d') 
+    )
+    form_widget_args = dict(
+        send_time={'data-date-format': u'YYYY-MM-DD'} 
+    )
     # 导出csv
     can_export = True
     # column_display_pk = True
     can_delete = False
+    column_filters = [ DateBetweenFilter( Post.send_time,u'发件时间'), 'company','send_time']
+    # column_filters = [ 'company',]
     column_searchable_list = ['phone']
+    form_excluded_columns = ['sms_status']
 
     @login_required
     def is_accessible(self):
@@ -79,9 +98,14 @@ class PostView(ModelView):
 
     # send msg
     def after_model_change(self, form, model, is_created):
-        tablename = form.tablename
         if is_created: # create the table just once
-            sendMsg(model.phone,'您的验证码是：【2499】。请不要把验证码泄露给其他人。') 
+            sms = sendMsg(model.phone,'您的验证码是：【2499】。请不要把验证码泄露给其他人。') 
+            if (sms == '2'):
+                model.sms_status = 1
+            else:
+                model.sms_status = 0
+            self.session.commit()
+
 
 # 用户管理
 class UserView(ModelView):
@@ -127,8 +151,8 @@ class ReceiptReportView(ModelView):
     column_labels = dict(
                         community_name = u'小区名称'
                         ,company = u'快递公司'
-                        ,count = u'收件数量'
                         ,my_month = u'年-月'
+                        ,count = u'收件数量'
                         )
     can_export = True
     can_delete = False
