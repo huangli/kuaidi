@@ -1,6 +1,7 @@
 #coding=utf-8
 from models import *
 from sms import sendMsg
+from __init__ import *
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib.sqla.view import func
 from flask_admin import helpers,expose,BaseView
@@ -28,7 +29,8 @@ class ReceiptView(ModelView):
     # column_display_pk = True
     can_delete = False
     column_searchable_list = ['phone']
-    column_filters = [ DateBetweenFilter( Receipt.delivery_time,u'寄存时间'), 'company']
+    column_filters = [ DateBetweenFilter( Receipt.delivery_time,u'寄存时间'), \
+                    'company', 'delivery_time']
     form_excluded_columns = ['sms_status']
     # column_exclude_list = ['community']
     # column_export_exclude_list = ['community']
@@ -53,7 +55,7 @@ class ReceiptView(ModelView):
     def after_model_change(self, form, model, is_created):
          # tablename = form.tablename
         if is_created: # create the table just once
-            sms = sendMsg(model.phone,'您的验证码是：【2499】。请不要把验证码泄露给其他人。') 
+            sms = sendMsg(model.phone, app.config['SMS_RECEIVE']) 
             if (sms == '2'):
                 model.sms_status = 1
             else:
@@ -91,6 +93,15 @@ class PostView(ModelView):
     column_searchable_list = ['phone']
     form_excluded_columns = ['sms_status']
 
+    # show receipts created by self
+    def get_query(self):
+        return self.session.query(self.model).\
+                filter(self.model.community_id==current_user.community.id)
+
+    def get_count_query(self):
+        return self.session.query(func.count('*')).\
+                filter(self.model.community_id==current_user.community.id)
+
     @login_required
     def is_accessible(self):
         # return current_user.is_authenticated
@@ -99,11 +110,13 @@ class PostView(ModelView):
     # send msg
     def after_model_change(self, form, model, is_created):
         if is_created: # create the table just once
-            sms = sendMsg(model.phone,'您的验证码是：【2499】。请不要把验证码泄露给其他人。') 
+            sms = sendMsg(model.phone, app.config['SMS_POST'])
+            print app.config['SMS_POST']
             if (sms == '2'):
                 model.sms_status = 1
             else:
                 model.sms_status = 0
+            model.community_id = current_user.community.id
             self.session.commit()
 
 
@@ -153,6 +166,25 @@ class ReceiptReportView(ModelView):
                         ,company = u'快递公司'
                         ,my_month = u'年-月'
                         ,count = u'收件数量'
+                        )
+    can_export = True
+    can_delete = False
+    can_edit = False
+    can_create = False
+    column_searchable_list = ['community_name', 'company', 'my_month']
+    @login_required
+    def is_accessible(self):
+        return current_user.has_role('admin')
+
+# 小区快递月度发件报表
+class PostReportView(ModelView):
+    column_labels = dict(
+                        community_name = u'小区名称'
+                        ,company = u'快递公司'
+                        ,my_month = u'年-月'
+                        ,count = u'发件数量'
+                        ,weight = u'重量(kg)'
+                        ,amount = u'金额(元)'
                         )
     can_export = True
     can_delete = False

@@ -166,10 +166,10 @@ class Post(db.Model):
     def __repr__(self):
         return '<Receipt %r>' % self.id
 
-# 小区快递月度报表
+# 小区快递月度收件报表
 class ReceiptReport(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    community_name = db.Column(db.String(30))
+    community_name = db.Column(db.String(40))
     company = db.Column(db.String(40)) 
     my_month = db.Column(db.String(20))
     count = db.Column(db.Integer)
@@ -179,3 +179,20 @@ class ReceiptReport(db.Model):
 
     def __repr__(self):
         return '<Report %r>' % self.id
+
+# 小区快递月度发件报表
+class PostReport(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    community_name = db.Column(db.String(40))
+    company = db.Column(db.String(40)) 
+    my_month = db.Column(db.String(20))
+    count = db.Column(db.Integer)
+    weight = db.Column(db.Float)
+    amount = db.Column(db.Float)
+
+    def __init__(self, **kwargs):
+        super(Post_Report, self).__init__(**kwargs)
+
+    def __repr__(self):
+        return '<Post_Report %r>' % self.id
+

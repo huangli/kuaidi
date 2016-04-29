@@ -9,6 +9,7 @@ def sendMsg(phone, content):
     r = requests.get(url = 'http://106.ihuyi.cn/webservice/sms.php', params = payload)
     root = ET.fromstring(r.text)
     sms_code = root.find('{http://106.ihuyi.cn/}code')
+    # print r.text
     return sms_code.text
 
 if __name__ == "__main__":
