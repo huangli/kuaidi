@@ -7,6 +7,16 @@ from flask_admin.model import filters
 import flask_admin as admin
 from flask.ext.security import SQLAlchemyUserDatastore
 
+@app.errorhandler(404)
+def pageNotFound(error):
+    return "不好意思，该页面不存在，︿(￣︶￣)︿"
+
+@app.errorhandler(500)
+def internal_error(error):
+    app.logger.ERROR(error)
+    return "服务器出现出错，请联系系统管理员"
+
+
 # Initialize flask-login
 def init_login():
     login_manager = LoginManager()
@@ -48,13 +58,22 @@ user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 if __name__ == '__main__':
     reload(sys)  
     sys.setdefaultencoding('utf8')
-    admin = admin.Admin(app, name=u'快件收发', index_view=MyAdminIndexView(),base_template='my_master.html')
+
+    formatter = logging.Formatter(
+        "[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s")
+    handler = RotatingFileHandler('kuaidi.log', maxBytes=10000000, backupCount=5)
+    handler.setLevel(logging.ERROR)
+    handler.setFormatter(formatter)
+    app.logger.addHandler(handler)
+
+    admin = admin.Admin(app, name=u'阳成科技', index_view=MyAdminIndexView(),base_template='my_master.html')
     # admin.locale_selector(get_locale)
     admin.add_view(ReceiptView(Receipt, db.session, u'收快递'))
     admin.add_view(PostView(Post, db.session, u'发快递'))
     admin.add_view(CommunityView(Community, db.session, u'小区'))
     admin.add_view(UserView(User, db.session, u'管理员'))
-    admin.add_view(ReceiptReportView(ReceiptReport, db.session, u'收件单'))
+    admin.add_view(ReceiptReportView(ReceiptReport, db.session, u'收件单报表'))
+    admin.add_view(PostReportView(PostReport, db.session, u'发件单报表'))
     # admin.add_view(MyView(name='Hello'))
     app.run(debug=True)
 

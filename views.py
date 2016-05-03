@@ -8,7 +8,7 @@ from flask_admin import helpers,expose,BaseView
 import flask_admin as admin
 from flask_admin.contrib.sqla.filters import BooleanEqualFilter,BaseSQLAFilter,DateBetweenFilter
 from flask.ext.login import login_user, logout_user, current_user, login_required
-from flask import  session, g, redirect, url_for
+from flask import  session, g, redirect, url_for, flash
 
 # 收件单View
 class ReceiptView(ModelView):
@@ -30,7 +30,7 @@ class ReceiptView(ModelView):
     can_delete = False
     column_searchable_list = ['phone']
     column_filters = [ DateBetweenFilter( Receipt.delivery_time,u'寄存时间'), \
-                    'company', 'delivery_time']
+                    'company', 'delivery_time', 'sms_status']
     form_excluded_columns = ['sms_status']
     # column_exclude_list = ['community']
     # column_export_exclude_list = ['community']
@@ -58,8 +58,11 @@ class ReceiptView(ModelView):
             sms = sendMsg(model.phone, app.config['SMS_RECEIVE']) 
             if (sms == '2'):
                 model.sms_status = 1
+                flash(u'短信发送成功')
             else:
                 model.sms_status = 0
+                flash(u'短信发送失败，请检查手机号码是否正确')
+                app.logger.error(model.phone + app.config['SMS_SEND_ERROR'])
             model.community_id = current_user.community.id
             self.session.commit()
 
@@ -88,7 +91,8 @@ class PostView(ModelView):
     can_export = True
     # column_display_pk = True
     can_delete = False
-    column_filters = [ DateBetweenFilter( Post.send_time,u'发件时间'), 'company','send_time']
+    column_filters = [ DateBetweenFilter( Post.send_time,u'发件时间'),\
+                     'company','send_time', 'sms_status']
     # column_filters = [ 'company',]
     column_searchable_list = ['phone']
     form_excluded_columns = ['sms_status']
@@ -110,14 +114,18 @@ class PostView(ModelView):
     # send msg
     def after_model_change(self, form, model, is_created):
         if is_created: # create the table just once
+            model.community_id = current_user.community.id
+        if model.is_pick == 1 and model.sms_status != 1:
             sms = sendMsg(model.phone, app.config['SMS_POST'])
-            print app.config['SMS_POST']
             if (sms == '2'):
                 model.sms_status = 1
+                flash(u'短信发送成功')
             else:
                 model.sms_status = 0
-            model.community_id = current_user.community.id
-            self.session.commit()
+                flash(u'短信发送失败，请检查手机号码是否正确')
+                app.logger.error(model.phone + app.config['SMS_SEND_ERROR'])
+        self.session.commit()
+
 
 
 # 用户管理
