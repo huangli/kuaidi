@@ -196,3 +196,10 @@ class PostReport(db.Model):
     def __repr__(self):
         return '<Post_Report %r>' % self.id
 
+# 未收快递报表, 统计每个月客户未收的报表
+class NotReceiveReport(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    community_name = db.Column(db.String(40))
+    company = db.Column(db.String(40)) 
+    my_month = db.Column(db.String(20))
+    count = db.Column(db.Integer)

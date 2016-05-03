@@ -203,6 +203,23 @@ class PostReportView(ModelView):
     def is_accessible(self):
         return current_user.has_role('admin')
 
+# 未收快递报表
+class NotReceiveReportView(ModelView):
+    column_labels = dict(
+                        community_name = u'小区名称'
+                        ,company = u'快递公司'
+                        ,my_month = u'年-月'
+                        ,count = u'未收快递数量'
+                        )
+    can_export = True
+    can_delete = False
+    can_edit = False
+    can_create = False
+    column_searchable_list = ['community_name', 'company', 'my_month']
+    @login_required
+    def is_accessible(self):
+        return current_user.has_role('admin')
+
 # logout
 class MyAdminIndexView(admin.AdminIndexView):
     @expose('/logout/')

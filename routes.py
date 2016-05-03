@@ -9,12 +9,16 @@ from flask.ext.security import SQLAlchemyUserDatastore
 
 @app.errorhandler(404)
 def pageNotFound(error):
-    return "不好意思，该页面不存在，︿(￣︶￣)︿"
+    return app.config['ERROR_404']
 
 @app.errorhandler(500)
 def internal_error(error):
     app.logger.ERROR(error)
-    return "服务器出现出错，请联系系统管理员"
+    return app.config['ERROR_500']
+
+@app.errorhandler(401)
+def internal_error(error):
+    return app.config['ERROR_401']
 
 
 # Initialize flask-login
@@ -70,10 +74,12 @@ if __name__ == '__main__':
     # admin.locale_selector(get_locale)
     admin.add_view(ReceiptView(Receipt, db.session, u'收快递'))
     admin.add_view(PostView(Post, db.session, u'发快递'))
+    # for admin
     admin.add_view(CommunityView(Community, db.session, u'小区'))
     admin.add_view(UserView(User, db.session, u'管理员'))
     admin.add_view(ReceiptReportView(ReceiptReport, db.session, u'收件单报表'))
     admin.add_view(PostReportView(PostReport, db.session, u'发件单报表'))
+    admin.add_view(NotReceiveReportView(NotReceiveReport, db.session, u'未收快递报表'))
     # admin.add_view(MyView(name='Hello'))
     app.run(debug=True)
 
