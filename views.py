@@ -9,6 +9,8 @@ import flask_admin as admin
 from flask_admin.contrib.sqla.filters import BooleanEqualFilter,BaseSQLAFilter,DateBetweenFilter
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask import  session, g, redirect, url_for, flash
+from wtforms.validators import DataRequired, Length, Regexp
+# from wtforms import validators
 
 # 收件单View
 class ReceiptView(ModelView):
@@ -23,7 +25,15 @@ class ReceiptView(ModelView):
                         ,is_sign=u'取件'
                         ,sms_status=u'短信'
                         )
-
+    form_args = dict(
+        express_id = dict( validators=[DataRequired()])
+        ,box_number = dict( validators=[DataRequired()])
+        ,company = dict( validators=[DataRequired()])
+        ,phone = dict( validators=[DataRequired(), Regexp(regex = "^1\d{10}$" \
+            ,flags = 0, message = app.config['PHONE_LENGTH_ERROR'])])
+        ,name = dict( validators=[DataRequired()])
+        ,delivery_time = dict(validators=[DataRequired()])
+    )
     # 导出csv
     can_export = True
     # column_display_pk = True
@@ -80,13 +90,27 @@ class PostView(ModelView):
                         ,is_pick=u'取件'
                         ,sms_status=u'短信'
                         )
-    form_excluded_columns = ['sms_status']
+
     form_args = dict(
-        send_time=dict(format='%Y-%m-%d') 
+        express_id = dict( validators=[DataRequired()])
+        ,box_number = dict( validators=[DataRequired()])
+        ,company = dict( validators=[DataRequired()])
+        ,phone = dict( validators=[DataRequired(), Regexp(regex = "^1\d{10}$" \
+            ,flags = 0, message = app.config['PHONE_LENGTH_ERROR'])])
+        ,name = dict( validators=[DataRequired()])
+        ,address = dict( validators=[DataRequired()])
+        ,send_time = dict( validators=[DataRequired()])
+        ,amount = dict( validators=[DataRequired()])
+        ,weight = dict( validators=[DataRequired()])
     )
-    form_widget_args = dict(
-        send_time={'data-date-format': u'YYYY-MM-DD'} 
-    )
+
+    form_excluded_columns = ['sms_status']
+    # form_args = dict(
+    #     send_time=dict(format='%Y-%m-%d') 
+    # )
+    # form_widget_args = dict(
+    #     send_time={'data-date-format': u'YYYY-MM-DD'} 
+    # )
     # 导出csv
     can_export = True
     # column_display_pk = True
@@ -137,6 +161,7 @@ class UserView(ModelView):
     # column_display_pk = True
     can_delete = True
     form_excluded_columns = ('roles')
+    column_hide_backrefs = True
     # column_searchable_list = ['phone']
 
     @login_required

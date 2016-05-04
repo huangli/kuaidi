@@ -9,3 +9,11 @@ SMS_CODE_SEARCH = '{http://106.ihuyi.cn/}code'
 ERROR_404 = '不好意思，该页面不存在，︿(￣︶￣)︿'
 ERROR_500 = '服务器出现出错，请联系系统管理员'
 ERROR_401 = '不好意思，您需要登录后才能访问该页面'
+PHONE_LENGTH_ERROR = '电话号码格式不正确'
+
+
+SQLALCHEMY_DATABASE_URI = 'mysql://root:converse@localhost/kuaidi'
+BABEL_DEFAULT_LOCALE = 'zh_CN'
+SECURITY_USER_IDENTITY_ATTRIBUTES = 'username'
+SECRET_KEY = 'afsdkj12345678'
+
