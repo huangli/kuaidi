@@ -48,6 +48,11 @@ class ReceiptView(ModelView):
     # column_hide_backrefs = True
     # form_choices = { 'company': [ ('0', 'Not Showing'), ('1', 'Showing')] }
 
+    def is_accessible(self):
+        # return current_user.is_authenticated
+        return current_user.has_role('user') 
+                
+
     # show receipts created by self
     def get_query(self):
         return self.session.query(self.model).filter(self.model.community_id==current_user.community.id)
@@ -55,11 +60,7 @@ class ReceiptView(ModelView):
     def get_count_query(self):
         return self.session.query(func.count('*')).filter(self.model.community_id==current_user.community.id)
 
-
-    @login_required
-    def is_accessible(self):
-        # return current_user.is_authenticated
-        return current_user.has_role('user')
+    
 
 
     def after_model_change(self, form, model, is_created):
@@ -130,7 +131,6 @@ class PostView(ModelView):
         return self.session.query(func.count('*')).\
                 filter(self.model.community_id==current_user.community.id)
 
-    @login_required
     def is_accessible(self):
         # return current_user.is_authenticated
         return current_user.has_role('user')
@@ -164,9 +164,9 @@ class UserView(ModelView):
     column_hide_backrefs = True
     # column_searchable_list = ['phone']
 
-    @login_required
     def is_accessible(self):
         # return current_user.is_authenticated
+        # if not current_user.is_authenticated(): return False
         return current_user.has_role('admin')
 
     def get_query(self):
@@ -188,7 +188,6 @@ class CommunityView(ModelView):
     column_searchable_list = ['name']
     form_columns = ['name']
 
-    @login_required
     def is_accessible(self):
         return current_user.has_role('admin')
 
@@ -205,7 +204,7 @@ class ReceiptReportView(ModelView):
     can_edit = False
     can_create = False
     column_searchable_list = ['community_name', 'company', 'my_month']
-    @login_required
+
     def is_accessible(self):
         return current_user.has_role('admin')
 
@@ -224,7 +223,6 @@ class PostReportView(ModelView):
     can_edit = False
     can_create = False
     column_searchable_list = ['community_name', 'company', 'my_month']
-    @login_required
     def is_accessible(self):
         return current_user.has_role('admin')
 
@@ -241,12 +239,14 @@ class NotReceiveReportView(ModelView):
     can_edit = False
     can_create = False
     column_searchable_list = ['community_name', 'company', 'my_month']
-    @login_required
     def is_accessible(self):
         return current_user.has_role('admin')
 
 # logout
 class MyAdminIndexView(admin.AdminIndexView):
+    def is_accessible(self):
+        return current_user.is_authenticated
+
     @expose('/logout/')
     def logout_view(self):
         logout_user()

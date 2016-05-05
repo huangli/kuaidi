@@ -17,9 +17,9 @@ def internal_error(error):
     app.logger.ERROR(error)
     return app.config['ERROR_500']
 
-@app.errorhandler(401)
+@app.errorhandler(403)
 def internal_error(error):
-    return app.config['ERROR_401']
+    return app.config['ERROR_403']
 
 
 # Initialize flask-login
@@ -31,6 +31,10 @@ def init_login():
     @login_manager.user_loader
     def load_user(user_id):
         return db.session.query(User).get(int(user_id))
+
+    @login_manager.unauthorized_handler
+    def unauthorized_handler():
+        return 'Unauthorized'
 
 
 @app.route('/')
@@ -71,7 +75,8 @@ if __name__ == '__main__':
     handler.setFormatter(formatter)
     app.logger.addHandler(handler)
 
-    admin = admin.Admin(app, name=u'阳成科技', index_view=MyAdminIndexView(),base_template='my_master.html')
+    admin = admin.Admin(app, name=u'阳成科技', index_view=MyAdminIndexView(),
+            base_template='my_master.html')
     # admin.locale_selector(get_locale)
     admin.add_view(ReceiptView(Receipt, db.session, u'收快递'))
     admin.add_view(PostView(Post, db.session, u'发快递'))

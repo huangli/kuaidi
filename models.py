@@ -49,6 +49,7 @@ class User(db.Model, UserMixin):
   # Flask-Login integration
     def is_authenticated(self):
         return True
+        # return self.authenticated
 
     def is_active(self):
         return True
