@@ -2,7 +2,8 @@
 from __init__ import *
 from views import *
 import sys
-from flask import Flask, request, session, g, redirect, url_for,abort, render_template, flash
+from flask import Flask, request, session, g, redirect, url_for,abort,\
+                 render_template, flash
 from flask_admin.model import filters
 import flask_admin as admin
 from flask.ext.security import SQLAlchemyUserDatastore

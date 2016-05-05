@@ -26,12 +26,12 @@ class ReceiptView(ModelView):
                         ,sms_status=u'短信'
                         )
     form_args = dict(
-        express_id = dict( validators=[DataRequired()])
-        ,box_number = dict( validators=[DataRequired()])
-        ,company = dict( validators=[DataRequired()])
-        ,phone = dict( validators=[DataRequired(), Regexp(regex = "^1\d{10}$" \
-            ,flags = 0, message = app.config['PHONE_LENGTH_ERROR'])])
-        ,name = dict( validators=[DataRequired()])
+        express_id = dict(validators=[DataRequired()])
+        ,box_number = dict(validators=[DataRequired()])
+        ,company = dict(validators=[DataRequired()])
+        ,phone = dict(validators=[DataRequired(), Regexp(regex='^1\d{10}$' 
+            ,flags=0, message=app.config['PHONE_LENGTH_ERROR'])])
+        ,name = dict(validators=[DataRequired()])
         ,delivery_time = dict(validators=[DataRequired()])
     )
     # 导出csv
@@ -92,16 +92,16 @@ class PostView(ModelView):
                         )
 
     form_args = dict(
-        express_id = dict( validators=[DataRequired()])
-        ,box_number = dict( validators=[DataRequired()])
-        ,company = dict( validators=[DataRequired()])
-        ,phone = dict( validators=[DataRequired(), Regexp(regex = "^1\d{10}$" \
-            ,flags = 0, message = app.config['PHONE_LENGTH_ERROR'])])
-        ,name = dict( validators=[DataRequired()])
-        ,address = dict( validators=[DataRequired()])
-        ,send_time = dict( validators=[DataRequired()])
-        ,amount = dict( validators=[DataRequired()])
-        ,weight = dict( validators=[DataRequired()])
+        express_id = dict(validators=[DataRequired()])
+        ,box_number = dict(validators=[DataRequired()])
+        ,company = dict(validators=[DataRequired()])
+        ,phone = dict(validators=[DataRequired(), Regexp(regex="^1\d{10}$" \
+            ,flags=0, message=app.config['PHONE_LENGTH_ERROR'])])
+        ,name = dict(validators=[DataRequired()])
+        ,address = dict(validators=[DataRequired()])
+        ,send_time = dict(validators=[DataRequired()])
+        ,amount = dict(validators=[DataRequired()])
+        ,weight = dict(validators=[DataRequired()])
     )
 
     form_excluded_columns = ['sms_status']
