@@ -1,1 +1,3 @@
 [2016-05-01 11:52:50,312] {/Users/rfm/Documents/Project/kuaidi/views.py:45} ERROR - An error occurred
+[2016-05-05 17:51:52,308] {/Users/rfm/Documents/Project/kuaidi/views.py:76} ERROR - 18671755701短信发送失败
+[2016-05-06 15:15:48,561] {/Users/rfm/Documents/Project/kuaidi/views.py:76} ERROR - 18671755701短信发送失败

@@ -87,6 +87,6 @@ if __name__ == '__main__':
     admin.add_view(PostReportView(PostReport, db.session, u'发件单报表'))
     admin.add_view(NotReceiveReportView(NotReceiveReport, db.session, u'未收快递报表'))
     # admin.add_view(MyView(name='Hello'))
-    app.run(debug=True)
+    app.run()
 
     # app.run(host='0.0.0.0',port=8080)
