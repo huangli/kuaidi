@@ -1,3 +1,15 @@
 [2016-05-01 11:52:50,312] {/Users/rfm/Documents/Project/kuaidi/views.py:45} ERROR - An error occurred
 [2016-05-05 17:51:52,308] {/Users/rfm/Documents/Project/kuaidi/views.py:76} ERROR - 18671755701短信发送失败
 [2016-05-06 15:15:48,561] {/Users/rfm/Documents/Project/kuaidi/views.py:76} ERROR - 18671755701短信发送失败
+[2016-05-07 09:17:21,339] {/Users/rfm/Documents/Project/kuaidi/views.py:76} ERROR - 18671755701短信发送失败
+[2016-05-07 09:32:14,884] {/Users/rfm/Documents/Project/kuaidi/views.py:76} ERROR - 15872533400短信发送失败
+[2016-05-07 09:34:23,505] {/Users/rfm/Documents/Project/kuaidi/views.py:150} ERROR - 15872533400短信发送失败
+[2016-05-07 09:46:11,451] {/Users/rfm/Documents/Project/kuaidi/views.py:76} ERROR - 13807203118短信发送失败
+[2016-05-07 10:26:43,407] {/Users/rfm/Documents/Project/kuaidi/views.py:150} ERROR - 13807203118短信发送失败
+[2016-05-07 10:26:52,937] {/Users/rfm/Documents/Project/kuaidi/views.py:150} ERROR - 13807203118短信发送失败
+[2016-05-07 10:34:14,167] {/Users/rfm/Documents/Project/kuaidi/views.py:150} ERROR - 13807203118短信发送失败
+[2016-05-07 10:34:31,777] {/Users/rfm/Documents/Project/kuaidi/views.py:150} ERROR - 13807203118短信发送失败
+[2016-05-07 10:34:36,635] {/Users/rfm/Documents/Project/kuaidi/views.py:150} ERROR - 18671755701短信发送失败
+[2016-05-07 10:34:58,929] {/Users/rfm/Documents/Project/kuaidi/views.py:150} ERROR - 18671755701短信发送失败
+[2016-05-07 10:50:27,303] {/Users/rfm/Documents/Project/kuaidi/views.py:150} ERROR - 13807203118短信发送失败
+[2016-05-07 21:37:12,603] {/Users/rfm/Documents/Project/kuaidi/views.py:96} ERROR - 18671755701短信发送失败

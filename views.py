@@ -10,8 +10,16 @@ from flask_admin.contrib.sqla.filters import BooleanEqualFilter,BaseSQLAFilter,D
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask import  session, g, redirect, url_for, flash
 from wtforms.validators import DataRequired, Length, Regexp
-# from wtforms import validators
+from datetime import date
+from flask_admin.model import typefmt
 
+def date_format(view, value):
+    return value.strftime('%Y-%m-%d')
+
+MY_DEFAULT_FORMATTERS = dict(typefmt.BASE_FORMATTERS)
+MY_DEFAULT_FORMATTERS.update({
+        date: date_format
+})
 # 收件单View
 class ReceiptView(ModelView):
     column_labels = dict(express_id=u'快递单'
@@ -32,8 +40,20 @@ class ReceiptView(ModelView):
         ,phone = dict(validators=[DataRequired(), Regexp(regex='^1\d{10}$' 
             ,flags=0, message=app.config['PHONE_LENGTH_ERROR'])])
         ,name = dict(validators=[DataRequired()])
-        ,delivery_time = dict(validators=[DataRequired()])
+        ,delivery_time = dict(validators=[DataRequired()],format='%Y-%m-%d %H:%M')
+        ,pick_time = dict(format='%Y-%m-%d %H:%M')
     )
+
+    # datetime format
+    form_widget_args = dict(
+        delivery_time={'data-date-format': u'YYYY-MM-DD HH:mm'} 
+        ,pick_time={'data-date-format': u'YYYY-MM-DD HH:mm'} 
+    )
+    column_type_formatters = MY_DEFAULT_FORMATTERS
+
+    # 最新创建的on top
+    column_default_sort = ('delivery_time', True)
+
     # 导出csv
     can_export = True
     # column_display_pk = True
@@ -88,7 +108,7 @@ class PostView(ModelView):
                         ,send_time=u'发件时间'
                         ,amount=u'金额(元)'
                         ,weight=u'重量(kg)'
-                        ,is_pick=u'取件'
+                        ,is_pick=u'寄件'
                         ,sms_status=u'短信'
                         )
 
@@ -100,10 +120,18 @@ class PostView(ModelView):
             ,flags=0, message=app.config['PHONE_LENGTH_ERROR'])])
         ,name = dict(validators=[DataRequired()])
         ,address = dict(validators=[DataRequired()])
-        ,send_time = dict(validators=[DataRequired()])
+        ,send_time = dict(validators=[DataRequired()], format='%Y-%m-%d %H:%M')
         ,amount = dict(validators=[DataRequired()])
         ,weight = dict(validators=[DataRequired()])
     )
+    # datetime format
+    form_widget_args = dict(
+        send_time={'data-date-format': u'YYYY-MM-DD HH:mm'} 
+    )
+    column_type_formatters = MY_DEFAULT_FORMATTERS
+
+    # 最近创建的on top
+    column_default_sort = ('send_time', True)
 
     form_excluded_columns = ['sms_status']
     # form_args = dict(
