@@ -39,6 +39,8 @@ d2 = datetime.today()
 receipt1 = Receipt('A0012312','box05','顺风','18671755701','黄立',d1,d2,c1.id)
 db.session.add(receipt1)
 db.session.commit()
+#如何获取3个月数据
+t1 = Receipt.query.filter()
 
 发件单
 c1 = db.session.query(Community).first()

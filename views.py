@@ -10,7 +10,7 @@ from flask_admin.contrib.sqla.filters import BooleanEqualFilter,BaseSQLAFilter,D
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask import  session, g, redirect, url_for, flash
 from wtforms.validators import DataRequired, Length, Regexp
-from datetime import date
+from datetime import datetime, timedelta
 from flask_admin.model import typefmt
 
 def date_format(view, value):
@@ -18,7 +18,7 @@ def date_format(view, value):
 
 MY_DEFAULT_FORMATTERS = dict(typefmt.BASE_FORMATTERS)
 MY_DEFAULT_FORMATTERS.update({
-        date: date_format
+        datetime: date_format
 })
 # 收件单View
 class ReceiptView(ModelView):
@@ -37,7 +37,7 @@ class ReceiptView(ModelView):
         express_id = dict(validators=[DataRequired()])
         ,box_number = dict(validators=[DataRequired()])
         ,company = dict(validators=[DataRequired()])
-        ,phone = dict(validators=[DataRequired(), Regexp(regex='^1\d{10}$' 
+        ,phone = dict(validators=[DataRequired(), Regexp(regex='^1\d{10}$'
             ,flags=0, message=app.config['PHONE_LENGTH_ERROR'])])
         ,name = dict(validators=[DataRequired()])
         ,delivery_time = dict(validators=[DataRequired()],format='%Y-%m-%d %H:%M')
@@ -46,12 +46,12 @@ class ReceiptView(ModelView):
 
     # datetime format
     form_widget_args = dict(
-        delivery_time={'data-date-format': u'YYYY-MM-DD HH:mm'} 
-        ,pick_time={'data-date-format': u'YYYY-MM-DD HH:mm'} 
+        delivery_time={'data-date-format': u'YYYY-MM-DD HH:mm'}
+        ,pick_time={'data-date-format': u'YYYY-MM-DD HH:mm'}
     )
     column_type_formatters = MY_DEFAULT_FORMATTERS
 
-    # 最新创建的on top
+    # 最新创建的sort
     column_default_sort = ('delivery_time', True)
 
     # 导出csv
@@ -70,23 +70,33 @@ class ReceiptView(ModelView):
 
     def is_accessible(self):
         # return current_user.is_authenticated
-        return current_user.has_role('user') 
-                
+        return current_user.has_role('user')
 
-    # show receipts created by self
+
+    # show receipts created by self and last 3 months, and not picked yet
     def get_query(self):
-        return self.session.query(self.model).filter(self.model.community_id==current_user.community.id)
+        last_90_day = datetime.now() + timedelta(days=-90)
+        last_90_receipes = self.session.query(self.model)  \
+                .filter(self.model.community_id==current_user.community.id) \
+                .filter(self.model.delivery_time >= last_90_day)
+        not_pick = self.session.query(self.model)          \
+                .filter(self.model.community_id==current_user.community.id) \
+                .filter(self.model.is_sign == 0)
+        return last_90_receipes.union(not_pick)
 
+    # if there are receipes not picked before 3 month eariler,
+    # that would be a mistake
     def get_count_query(self):
-        return self.session.query(func.count('*')).filter(self.model.community_id==current_user.community.id)
-
-    
-
+        last_90_day = datetime.now() + timedelta(days=-90)
+        num_last_90_receipes = self.session.query(func.count('*'))  \
+                .filter(self.model.community_id==current_user.community.id) \
+                .filter(self.model.delivery_time >= last_90_day)
+        return num_last_90_receipes
 
     def after_model_change(self, form, model, is_created):
          # tablename = form.tablename
         if is_created: # create the table just once
-            sms = sendMsg(model.phone, app.config['SMS_RECEIVE']) 
+            sms = sendMsg(model.phone, app.config['SMS_RECEIVE'])
             if (sms == '2'):
                 model.sms_status = 1
                 flash(u'短信发送成功')
@@ -97,7 +107,7 @@ class ReceiptView(ModelView):
             model.community_id = current_user.community.id
             self.session.commit()
 
-# 寄件单View 
+# 寄件单View
 class PostView(ModelView):
     column_labels = dict(express_id=u'快递单'
                         ,box_number=u'箱柜号'
@@ -126,7 +136,7 @@ class PostView(ModelView):
     )
     # datetime format
     form_widget_args = dict(
-        send_time={'data-date-format': u'YYYY-MM-DD HH:mm'} 
+        send_time={'data-date-format': u'YYYY-MM-DD HH:mm'}
     )
     column_type_formatters = MY_DEFAULT_FORMATTERS
 
@@ -135,10 +145,10 @@ class PostView(ModelView):
 
     form_excluded_columns = ['sms_status']
     # form_args = dict(
-    #     send_time=dict(format='%Y-%m-%d') 
+    #     send_time=dict(format='%Y-%m-%d')
     # )
     # form_widget_args = dict(
-    #     send_time={'data-date-format': u'YYYY-MM-DD'} 
+    #     send_time={'data-date-format': u'YYYY-MM-DD'}
     # )
     # 导出csv
     can_export = True
@@ -152,12 +162,18 @@ class PostView(ModelView):
 
     # show receipts created by self
     def get_query(self):
-        return self.session.query(self.model).\
-                filter(self.model.community_id==current_user.community.id)
+        last_90_day = datetime.now() + timedelta(days=-90)
+        last_90_post = self.session.query(self.model)  \
+                .filter(self.model.community_id==current_user.community.id) \
+                .filter(self.model.send_time >= last_90_day)
+        return last_90_post
 
     def get_count_query(self):
-        return self.session.query(func.count('*')).\
-                filter(self.model.community_id==current_user.community.id)
+        last_90_day = datetime.now() + timedelta(days=-90)
+        num_last_90_post = self.session.query(func.count('*'))  \
+                .filter(self.model.community_id==current_user.community.id) \
+                .filter(self.model.send_time >= last_90_day)
+        return num_last_90_post
 
     def is_accessible(self):
         # return current_user.is_authenticated
@@ -204,7 +220,7 @@ class UserView(ModelView):
         return self.session.query(func.count('*')).filter(self.model.username!='admin')
 
     def after_model_change(self, form, model, is_created):
-        if is_created: 
+        if is_created:
             # add user role
             end_user = self.session.query(Role).filter_by(name='user').first()
             model.roles.append(end_user)

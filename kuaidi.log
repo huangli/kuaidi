@@ -13,3 +13,46 @@
 [2016-05-07 10:34:58,929] {/Users/rfm/Documents/Project/kuaidi/views.py:150} ERROR - 18671755701短信发送失败
 [2016-05-07 10:50:27,303] {/Users/rfm/Documents/Project/kuaidi/views.py:150} ERROR - 13807203118短信发送失败
 [2016-05-07 21:37:12,603] {/Users/rfm/Documents/Project/kuaidi/views.py:96} ERROR - 18671755701短信发送失败
+[2016-05-10 16:57:09,484] {routes.py:13} ERROR - 404: Not Found 
+[2016-05-10 16:57:10,414] {routes.py:13} ERROR - 404: Not Found 
+[2016-05-10 16:58:15,920] {routes.py:13} ERROR - 404: Not Found
+[2016-05-10 16:58:16,919] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:27:06,817] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:27:07,812] {routes.py:27} ERROR - Unhandled Exception: global name 'datetime' is not defined
+[2016-05-12 21:27:08,290] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:30:53,209] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:31:06,802] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:31:08,613] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:31:21,718] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:31:24,707] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:31:52,684] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:31:57,662] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:31:59,262] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:32:25,277] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:32:28,304] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:32:29,013] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:32:30,808] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:32:39,843] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:32:42,408] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:32:43,661] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:32:44,710] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:32:45,692] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:37:20,689] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:39:39,162] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:39:53,760] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:44:15,495] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:51:24,403] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:51:39,187] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:54:48,905] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:57:40,850] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:58:32,828] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:58:35,679] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:58:44,835] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:58:48,590] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:58:52,171] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 21:58:54,638] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 22:02:07,864] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 22:04:34,016] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 22:04:37,311] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 22:04:52,813] {routes.py:13} ERROR - 404: Not Found
+[2016-05-12 22:05:20,037] {routes.py:13} ERROR - 404: Not Found
