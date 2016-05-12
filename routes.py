@@ -22,10 +22,10 @@ def internal_error(error):
 def internal_error(error):
     return app.config['ERROR_403']
 
-# @app.errorhandler(Exception)
-# def unhandled_exception(e):
-    # app.logger.error('Unhandled Exception: %s', (e))
-    # return app.config['ERROR_500']
+@app.errorhandler(Exception)
+def unhandled_exception(e):
+    app.logger.error('Unhandled Exception: %s', (e))
+    return app.config['ERROR_500']
 
 # Initialize flask-login
 def init_login():
