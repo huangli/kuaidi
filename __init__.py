@@ -9,6 +9,7 @@ from logging.handlers import RotatingFileHandler
 app = Flask(__name__)
 app.config.from_object('config.DevConfig')
 # app.config.from_object('config.ProdConfig')
+
 babel = Babel(app)
 db = SQLAlchemy(app)
 
