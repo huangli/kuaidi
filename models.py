@@ -9,6 +9,7 @@ roles_users = db.Table('roles_users',
 
 
 # Role class
+# 1: admin 2: user
 class Role(db.Model, RoleMixin):
     # Our Role has three fields, ID, name and description
     id = db.Column(db.Integer(), primary_key=True)
@@ -111,7 +112,7 @@ class Community(db.Model):
 class Receipt(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     express_id = db.Column(db.String(60), index=True)
-    box_number = db.Column(db.String(20)) 
+    box_number = db.Column(db.String(20))
     company = db.Column(db.String(40))
     phone = db.Column(db.String(20),index=True)
     name = db.Column(db.String(40))
@@ -157,7 +158,7 @@ class Post(db.Model):
     community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
     is_pick = db.Column(db.Boolean)
     # message status
-    sms_status = db.Column(db.Boolean)  
+    sms_status = db.Column(db.Boolean)
 
     def __init__(self, **kwargs):
         super(Post, self).__init__(**kwargs)
@@ -171,7 +172,7 @@ class Post(db.Model):
 class ReceiptReport(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     community_name = db.Column(db.String(40))
-    company = db.Column(db.String(40)) 
+    company = db.Column(db.String(40))
     my_month = db.Column(db.String(20))
     count = db.Column(db.Integer)
 
@@ -185,7 +186,7 @@ class ReceiptReport(db.Model):
 class PostReport(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     community_name = db.Column(db.String(40))
-    company = db.Column(db.String(40)) 
+    company = db.Column(db.String(40))
     my_month = db.Column(db.String(20))
     count = db.Column(db.Integer)
     weight = db.Column(db.Float)
@@ -201,6 +202,6 @@ class PostReport(db.Model):
 class NotReceiveReport(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     community_name = db.Column(db.String(40))
-    company = db.Column(db.String(40)) 
+    company = db.Column(db.String(40))
     my_month = db.Column(db.String(20))
     count = db.Column(db.Integer)

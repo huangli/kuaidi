@@ -3,3 +3,4 @@ include/
 lib/
 tests/
 pip-selfcheck.json
+kuaidi.log
