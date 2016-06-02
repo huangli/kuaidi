@@ -12,7 +12,7 @@ class BaseConfig(object):
 
     BABEL_DEFAULT_LOCALE = 'zh_CN'
     SECURITY_USER_IDENTITY_ATTRIBUTES = 'username'
-    SECRET_KEY = 'afsdkj12345678'
+    SECRET_KEY = 'X9wgSXgS4$!fZ8yf9kPf6FCWF$z6#f*ph*Zva6YPtGXhkRaVa'
 
 class DevConfig(BaseConfig):
     DEBUG = True
@@ -22,6 +22,6 @@ class DevConfig(BaseConfig):
 
 class ProdConfig(BaseConfig):
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:converse@localhost/kuaidi'    
+    SQLALCHEMY_DATABASE_URI = 'mysql://root:converse@localhost/kuaidi'
     SMS_RECEIVE = '您的验证码是：【6699】。请不要把验证码泄露给其他人。'
     SMS_POST = '您的验证码是：【4499】。请不要把验证码泄露给其他人。'
