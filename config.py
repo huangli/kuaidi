@@ -23,6 +23,7 @@ class DevConfig(BaseConfig):
 
 class ProdConfig(BaseConfig):
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = 'mysql://kuaidi:u02!uhfhau4@localhost/kuaidi'
+    SQLALCHEMY_DATABASE_URI = ('mysql://kuaidi:uxJIZcKbGJr1qrU^ED5TN5gnuuYOllMF
+                    wDRfQ6&RbH#3&2OV@localhost/kuaidi')
     SMS_RECEIVE = '您的验证码是：【6699】。请不要把验证码泄露给其他人。'
     SMS_POST = '您的验证码是：【4499】。请不要把验证码泄露给其他人。'
