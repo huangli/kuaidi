@@ -7,8 +7,8 @@ from logging.handlers import RotatingFileHandler
 # from flask.ext.security import SQLAlchemyUserDatastore,UserMixin, RoleMixin, login_required
 
 app = Flask(__name__)
-app.config.from_object('config.DevConfig')
-# app.config.from_object('config.ProdConfig')
+# app.config.from_object('config.DevConfig')
+app.config.from_object('config.ProdConfig')
 
 babel = Babel(app)
 db = SQLAlchemy(app)
