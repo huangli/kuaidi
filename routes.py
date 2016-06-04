@@ -68,29 +68,29 @@ def login():
 init_login()
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+reload(sys)
+sys.setdefaultencoding('utf8')
+
+formatter = logging.Formatter(
+    "[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s")
+handler = RotatingFileHandler('kuaidi.log', maxBytes=10000000, backupCount=5)
+handler.setLevel(logging.ERROR)
+handler.setFormatter(formatter)
+app.logger.addHandler(handler)
+
+admin = admin.Admin(app, name=u'阳成科技', index_view=MyAdminIndexView(),
+        base_template='my_master.html')
+# admin.locale_selector(get_locale)
+admin.add_view(ReceiptView(Receipt, db.session, u'收快递'))
+admin.add_view(PostView(Post, db.session, u'发快递'))
+# for admin
+admin.add_view(CommunityView(Community, db.session, u'小区'))
+admin.add_view(UserView(User, db.session, u'管理员'))
+admin.add_view(ReceiptReportView(ReceiptReport, db.session, u'收件单报表'))
+admin.add_view(PostReportView(PostReport, db.session, u'发件单报表'))
+admin.add_view(NotReceiveReportView(NotReceiveReport, db.session, u'未收快递报表'))
 
 if __name__ == '__main__':
-    reload(sys)
-    sys.setdefaultencoding('utf8')
-
-    formatter = logging.Formatter(
-        "[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s")
-    handler = RotatingFileHandler('kuaidi.log', maxBytes=10000000, backupCount=5)
-    handler.setLevel(logging.ERROR)
-    handler.setFormatter(formatter)
-    app.logger.addHandler(handler)
-
-    admin = admin.Admin(app, name=u'阳成科技', index_view=MyAdminIndexView(),
-            base_template='my_master.html')
-    # admin.locale_selector(get_locale)
-    admin.add_view(ReceiptView(Receipt, db.session, u'收快递'))
-    admin.add_view(PostView(Post, db.session, u'发快递'))
-    # for admin
-    admin.add_view(CommunityView(Community, db.session, u'小区'))
-    admin.add_view(UserView(User, db.session, u'管理员'))
-    admin.add_view(ReceiptReportView(ReceiptReport, db.session, u'收件单报表'))
-    admin.add_view(PostReportView(PostReport, db.session, u'发件单报表'))
-    admin.add_view(NotReceiveReportView(NotReceiveReport, db.session, u'未收快递报表'))
     # admin.add_view(MyView(name='Hello'))
     app.run()
 
