@@ -1,4 +1,4 @@
-#coding=utf-8
+# coding=utf-8
 class BaseConfig(object):
     SMS_SEND_ERROR = '短信发送失败'
     SMS_ACCOUNT = 'cf_ycnws'
@@ -15,15 +15,16 @@ class BaseConfig(object):
     SECRET_KEY = 'X9wgSXgS4$!fZ8yf9kPf6FCWF$z6#f*ph*Zva6YPtGXhkRaVa'
     SQLALCHEMY_TRACK_MODIFICATIONS = 'None'
 
+
 class DevConfig(BaseConfig):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'mysql://root:converse@localhost/kuaidi'
     SMS_RECEIVE = '您的验证码是：【6699】。请不要把验证码泄露给其他人。'
     SMS_POST = '您的验证码是：【4499】。请不要把验证码泄露给其他人。'
 
+
 class ProdConfig(BaseConfig):
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = ('mysql://kuaidi:uxJIZcKbGJr1qrU^ED5TN5gnuuYOllMF \
-                    wDRfQ6&RbH#3&2OV@localhost/kuaidi')
+    SQLALCHEMY_DATABASE_URI = ('mysql://kuaidi:uxJIZcKbGJr1qrU^ED5TN5gnuuYOllMFwDRfQ6&RbH#3&2OV@localhost/kuaidi')
     SMS_RECEIVE = '您的验证码是：【6699】。请不要把验证码泄露给其他人。'
     SMS_POST = '您的验证码是：【4499】。请不要把验证码泄露给其他人。'

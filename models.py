@@ -1,11 +1,12 @@
-#coding=utf-8
-from  __init__ import db
-from flask.ext.security import SQLAlchemyUserDatastore,UserMixin, RoleMixin, login_required
+# coding=utf-8
+from __init__ import db
+from flask.ext.security import SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required
 
-
-roles_users = db.Table('roles_users',
-        db.Column('user_id', db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE')),
-        db.Column('role_id', db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE')))
+roles_users = db.Table(
+    'roles_users',
+    db.Column('user_id', db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE')),
+    db.Column('role_id', db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
+    )
 
 
 # Role class
@@ -25,6 +26,7 @@ class Role(db.Model, RoleMixin):
     def __hash__(self):
         return hash(self.name)
 
+
 # 小区管理员
 # username: 管理员账号
 # password:密码
@@ -34,7 +36,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(40))
     password = db.Column(db.String(20))
     # community = db.relationship('Community', backref='Community.name', primaryjoin='User.id==Community.user_id')
-    community = db.relationship('Community', backref='Community',uselist=False)
+    community = db.relationship('Community', backref='Community', uselist=False)
     roles = db.relationship(
         'Role',
         secondary=roles_users,
@@ -42,12 +44,12 @@ class User(db.Model, UserMixin):
     )
 
     def __init__(self, **kwargs):
-      super(User, self).__init__(**kwargs)
+        super(User, self).__init__(**kwargs)
 
     def __repr__(self):
         return '<User %r>' % self.username
 
-  # Flask-Login integration
+# Flask-Login integration
     def is_authenticated(self):
         return True
         # return self.authenticated
@@ -61,11 +63,12 @@ class User(db.Model, UserMixin):
     def get_id(self):
         return self.id
 
-  # Required for administrative interface
+# Required for administrative interface
     def __unicode__(self):
         return self.username
 
-#小区住户
+
+# 小区住户
 class Inhabitant(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40))
@@ -77,7 +80,6 @@ class Inhabitant(db.Model):
     def __init__(self, **kwargs):
         super(Inhabitant, self).__init__(**kwargs)
 
-
     def __repr__(self):
         return '<Inhabitant %r>' % self.name
 
@@ -88,7 +90,7 @@ class Inhabitant(db.Model):
 class Community(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id',ondelete='CASCADE'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
 
     def __init__(self, **kwargs):
         super(Community, self).__init__(**kwargs)
@@ -98,8 +100,8 @@ class Community(db.Model):
 
 
 # 快递收存单
-#id: 主键
-#id: 快递单号
+# id: 主键
+# id: 快递单号
 # box_number:箱柜编号
 # company：快递公司
 # phone：客户电话
@@ -114,9 +116,9 @@ class Receipt(db.Model):
     express_id = db.Column(db.String(60), index=True)
     box_number = db.Column(db.String(20))
     company = db.Column(db.String(40))
-    phone = db.Column(db.String(20),index=True)
+    phone = db.Column(db.String(20), index=True)
     name = db.Column(db.String(40))
-    delivery_time = db.Column(db.DateTime,index=True)
+    delivery_time = db.Column(db.DateTime, index=True)
     pick_time = db.Column(db.DateTime)
     address = db.Column(db.String(40))
     community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
@@ -133,9 +135,10 @@ class Receipt(db.Model):
     def __repr__(self):
         return '<Receipt %r>' % self.id
 
+
 # 快递发件单
 # id:主键
-#express_id: 快递单号
+# express_id: 快递单号
 # company:快递公司
 # name：客户姓名
 # phone：客户电话
@@ -147,7 +150,7 @@ class Receipt(db.Model):
 # is_pick: 0快递员未取件，1快递员已经取件
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    express_id = db.Column(db.String(60),index=True)
+    express_id = db.Column(db.String(60), index=True)
     company = db.Column(db.String(40))
     phone = db.Column(db.String(20), index=True)
     name = db.Column(db.String(40))
@@ -168,6 +171,7 @@ class Post(db.Model):
     def __repr__(self):
         return '<Receipt %r>' % self.id
 
+
 # 小区快递月度收件报表
 class ReceiptReport(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -181,6 +185,7 @@ class ReceiptReport(db.Model):
 
     def __repr__(self):
         return '<Report %r>' % self.id
+
 
 # 小区快递月度发件报表
 class PostReport(db.Model):
@@ -197,6 +202,7 @@ class PostReport(db.Model):
 
     def __repr__(self):
         return '<Post_Report %r>' % self.id
+
 
 # 未收快递报表, 统计每个月客户未收的报表
 class NotReceiveReport(db.Model):

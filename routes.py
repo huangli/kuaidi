@@ -1,31 +1,36 @@
-#coding=utf-8
+# coding=utf-8
 from __init__ import *
 from views import *
 import sys
-from flask import Flask, request, session, g, redirect, url_for,abort,\
+from flask import Flask, request, session, g, redirect, url_for, abort,\
                  render_template, flash
 from flask_admin.model import filters
 import flask_admin as admin
 from flask.ext.security import SQLAlchemyUserDatastore
+
 
 @app.errorhandler(404)
 def pageNotFound(error):
     app.logger.error(error)
     return app.config['ERROR_404']
 
+
 @app.errorhandler(500)
 def internal_error(error):
     app.logger.ERROR(error)
     return app.config['ERROR_500']
 
+
 @app.errorhandler(403)
 def internal_error(error):
     return app.config['ERROR_403']
+
 
 @app.errorhandler(Exception)
 def unhandled_exception(e):
     app.logger.error('Unhandled Exception: %s', (e))
     return app.config['ERROR_500']
+
 
 # Initialize flask-login
 def init_login():
@@ -33,6 +38,7 @@ def init_login():
     login_manager.init_app(app)
     # login_manager.login_view = 'login'
     # Create user loader function
+
     @login_manager.user_loader
     def load_user(user_id):
         return db.session.query(User).get(int(user_id))
@@ -44,17 +50,19 @@ def init_login():
 
 @app.route('/')
 def index():
-  return render_template('login.html')
-  # return redirect(url_for('login'))
+    return render_template('login.html')
+    # return redirect(url_for('login'))
 
-@app.route('/login',methods=['GET','POST'])
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'GET':
         return render_template('login.html')
     username = request.form.get('username')
     password = request.form.get('password')
-    registered_user = User.query.filter_by(username=username,password=password).first()
+    registered_user = User.query.filter_by(username=username,
+                                           password=password).first()
     if registered_user is not None:
         login_user(registered_user)
         flash(u'登陆成功!')
@@ -78,8 +86,12 @@ handler.setLevel(logging.ERROR)
 handler.setFormatter(formatter)
 app.logger.addHandler(handler)
 
-admin = admin.Admin(app, name=u'阳成科技', index_view=MyAdminIndexView(),
-        base_template='my_master.html')
+admin = admin.Admin(
+                    app,
+                    name=u'阳成科技',
+                    index_view=MyAdminIndexView(),
+                    base_template='my_master.html'
+                    )
 # admin.locale_selector(get_locale)
 admin.add_view(ReceiptView(Receipt, db.session, u'收快递'))
 admin.add_view(PostView(Post, db.session, u'发快递'))
