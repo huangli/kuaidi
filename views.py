@@ -140,7 +140,7 @@ class PostView(ModelView):
         box_number=dict(validators=[DataRequired()]),
         company=dict(validators=[DataRequired()]),
         phone=dict(
-            validator=[
+            validators=[
                 DataRequired(),
                 Regexp(
                     regex="^1\d{10}$",

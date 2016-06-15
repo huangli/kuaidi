@@ -17,7 +17,7 @@ def pageNotFound(error):
 
 @app.errorhandler(500)
 def internal_error(error):
-    app.logger.ERROR(error)
+    app.logger.error(error)
     return app.config['ERROR_500']
 
 
